@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #111;
+  color: #fff;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ▼ ヘッダー */
+.app-header {
+  text-align: center;
+  padding: 24px 16px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.app-desc {
+  margin-top: 8px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* ▼ メイン */
+.app-main {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
