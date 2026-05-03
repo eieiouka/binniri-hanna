@@ -3,6 +3,8 @@ import "./PuzzleBoard.css";
 import initialPieces from "../../data/initialPieces";
 
 const CELL_SIZE = 80;
+const COLS = 4;
+const ROWS = 5;
 
 export default function PuzzleBoard() {
   const [pieces, setPieces] = useState(initialPieces);
@@ -15,9 +17,25 @@ export default function PuzzleBoard() {
     return musume && musume.x === 1 && musume.y >= 3;
   };
 
+  // 🔥 修正版：娘だけ出口から外に出られる
   const canMove = (targetPiece, dx, dy, currentPieces) => {
     const nextX = targetPiece.x + dx;
     const nextY = targetPiece.y + dy;
+
+    const isMusumeEscaping =
+      targetPiece.id === "musume" &&
+      nextX === 1 &&
+      nextY + targetPiece.h <= 6;
+
+    const isInsideBoard =
+      nextX >= 0 &&
+      nextY >= 0 &&
+      nextX + targetPiece.w <= COLS &&
+      nextY + targetPiece.h <= ROWS;
+
+    if (!isInsideBoard && !isMusumeEscaping) {
+      return false;
+    }
 
     return !currentPieces.some((other) => {
       if (other.id === targetPiece.id) return false;
@@ -119,7 +137,7 @@ export default function PuzzleBoard() {
         </div>
       </div>
 
-      {/* モーダル */}
+      {/* 🔥 中央モーダル */}
       {isClear && (
         <div className="clear-modal">
           <div className="clear-box">
