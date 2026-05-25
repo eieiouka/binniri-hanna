@@ -35,7 +35,7 @@ body {
 .game-title {
   position: fixed;
 
-  top: 12px;
+  top: 0px;
   left: 50%;
 
   transform: translateX(-50%);
@@ -54,7 +54,7 @@ body {
 
   color: white;
 
-  font-size: 20px !important;
+  font-size: 25px !important;
 
   letter-spacing: 0.04em;
 
@@ -130,16 +130,13 @@ body {
 
     font-size: 14px !important;
 
-    padding: 10px 14px;
+    width: calc(100% - 4px);
+
+    max-width: none;
+
+    padding: 12px 10px;
 
     border-radius: 18px;
-
-    max-width: calc(100% - 20px);
-  }
-
-  .title-green,
-  .title-rest {
-    display: block;
   }
 
   body {

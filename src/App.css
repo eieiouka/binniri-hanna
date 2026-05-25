@@ -58,7 +58,7 @@ body {
     rgba(255, 255, 255, 0.22);
 
   background:
-    rgba(255, 0, 0, 0.45);
+    rgba(255, 0, 0, 0.8);
 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -99,16 +99,22 @@ body {
 
 @media (max-width: 768px) {
   .game-title {
-    font-size: 34px;
+    font-size: 24px !important;
 
-    padding: 14px 20px;
+    width: calc(100% - 8px);
 
-    margin-top: 18px;
+    max-width: none;
+
+    padding: 12px 10px;
+
+    margin-top: 8px;
+
+    border-radius: 18px;
   }
 
   .title-green,
   .title-rest {
-    display: block;
+    display: inline;
   }
 
   body {
