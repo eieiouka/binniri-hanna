@@ -18,8 +18,12 @@ body {
 
   background-image: url("/images/background.png");
   background-repeat: no-repeat;
+
   background-position: center center;
-  background-size: auto 75vh;
+
+  /* ▼ UI全体に合わせる */
+  background-size:
+    auto calc(100vh - 10px);
 }
 
 .app {
@@ -101,13 +105,14 @@ body {
 
 @media (max-width: 768px) {
   .game-title {
-    font-size: clamp(14px, 4.8vw, 22px) !important;
+    font-size:
+      clamp(16px, 4.8vw, 25px) !important;
 
-    width: calc(100% - 8px);
+    width: calc(100% - 4px);
 
     max-width: none;
 
-    padding: 12px 8px;
+    padding: 12px 4px;
 
     margin-top: 8px;
 
@@ -123,5 +128,8 @@ body {
 
   body {
     background-position: center top;
+
+    background-size:
+      auto calc(100vh - 10px);
   }
 }
