@@ -101,7 +101,7 @@ body {
 
 @media (max-width: 768px) {
   .game-title {
-    font-size: clamp(16px, 4.8vw, 25px) !important;
+    font-size: clamp(14px, 4.8vw, 22px) !important;
 
     width: calc(100% - 8px);
 
