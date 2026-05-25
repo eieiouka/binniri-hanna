@@ -14,11 +14,12 @@ body {
   font-family: sans-serif;
   color: #fff;
 
+  background-color: #000;
+
   background-image: url("/images/background.png");
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: auto 100vh;
-  background-color: #111;
+  background-size: auto 75vh;
 }
 
 .app {
@@ -26,10 +27,91 @@ body {
   min-height: 100vh;
 }
 
+.game-title {
+  width: fit-content;
+  max-width: calc(100% - 32px);
+
+  margin: 24px auto 12px;
+
+  padding: 16px 34px;
+
+  text-align: center;
+
+  font-weight: 900;
+  line-height: 1.25;
+
+  color: white;
+
+  font-size: clamp(28px, 4vw, 54px);
+
+  letter-spacing: 0.04em;
+
+  font-family:
+    "Hiragino Mincho ProN",
+    "Yu Mincho",
+    serif;
+
+  border-radius: 22px;
+
+  border:
+    2px solid
+    rgba(255, 255, 255, 0.22);
+
+  background:
+    rgba(255, 0, 0, 0.45);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 0 24px rgba(0, 0, 0, 0.35),
+    0 0 40px rgba(140, 80, 255, 0.18),
+    inset 0 0 18px rgba(255, 255, 255, 0.08);
+
+  text-shadow:
+    0 0 12px rgba(0, 0, 0, 0.45),
+    0 4px 18px rgba(0, 0, 0, 0.45),
+    0 0 28px rgba(0, 0, 0, 0.45);
+}
+
+.title-green {
+  color: #8dff8d;
+
+  text-shadow:
+    0 0 10px rgba(141, 255, 141, 0.7),
+    0 0 24px rgba(141, 255, 141, 0.45),
+    0 0 40px rgba(141, 255, 141, 0.25);
+}
+
+.title-rest {
+  color: white;
+}
+
 .app-main {
-  min-height: 100vh;
+  min-height: calc(100vh - 120px);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .game-title {
+    font-size: 34px;
+
+    padding: 14px 20px;
+
+    margin-top: 18px;
+  }
+
+  .title-green,
+  .title-rest {
+    display: block;
+  }
+
+  body {
+    background-position: center top;
+  }
 }
