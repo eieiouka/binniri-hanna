@@ -20,6 +20,8 @@ body {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: auto 75vh;
+
+  overflow: hidden;
 }
 
 .app {
@@ -27,11 +29,21 @@ body {
   min-height: 100vh;
 }
 
+/* =========================
+   ▼ タイトル
+========================= */
 .game-title {
+  position: fixed;
+
+  top: 12px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 50;
+
   width: fit-content;
   max-width: calc(100% - 32px);
-
-  margin: 20px auto 10px;
 
   padding: 12px 24px;
 
@@ -42,7 +54,7 @@ body {
 
   color: white;
 
-  font-size: clamp(22px, 3vw, 42px);
+  font-size: 20px !important;
 
   letter-spacing: 0.04em;
 
@@ -87,25 +99,42 @@ body {
   color: white;
 }
 
+/* =========================
+   ▼ メイン
+========================= */
 .app-main {
-  min-height: calc(100vh - 120px);
+  position: fixed;
+
+  inset: 0;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
   padding: 20px;
+
+  pointer-events: none;
 }
 
+/* パズルだけ操作可能 */
+.puzzle-area {
+  pointer-events: auto;
+}
+
+/* =========================
+   ▼ スマホ
+========================= */
 @media (max-width: 768px) {
   .game-title {
-    font-size: 18px;
+    top: 8px;
+
+    font-size: 14px !important;
 
     padding: 10px 14px;
 
-    margin-top: 12px;
-
     border-radius: 18px;
+
+    max-width: calc(100% - 20px);
   }
 
   .title-green,
