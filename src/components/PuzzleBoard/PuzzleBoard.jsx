@@ -17,16 +17,16 @@ export default function PuzzleBoard() {
   const dragRef = useRef(null);
 
   const checkClear = (pieces) => {
-    const musume = pieces.find((p) => p.id === "musume");
-    return musume && musume.x === 1 && musume.y >= 3;
+    const hanna = pieces.find((p) => p.id === "hanna");
+    return hanna && hanna.x === 1 && hanna.y >= 3;
   };
 
   const canMove = (targetPiece, dx, dy, pieces) => {
     const nextX = targetPiece.x + dx;
     const nextY = targetPiece.y + dy;
 
-    const isMusumeEscaping =
-      targetPiece.id === "musume" &&
+    const isHannaEscaping =
+      targetPiece.id === "hanna" &&
       nextX === 1 &&
       nextY + targetPiece.h <= 6;
 
@@ -36,7 +36,7 @@ export default function PuzzleBoard() {
       nextX + targetPiece.w <= COLS &&
       nextY + targetPiece.h <= ROWS;
 
-    if (!isInsideBoard && !isMusumeEscaping) return false;
+    if (!isInsideBoard && !isHannaEscaping) return false;
 
     return !pieces.some((other) => {
       if (other.id === targetPiece.id) return false;
@@ -59,7 +59,9 @@ export default function PuzzleBoard() {
       if (!canMove(target, dx, dy, prev.pieces)) return prev;
 
       const nextPieces = prev.pieces.map((p) =>
-        p.id === pieceId ? { ...p, x: p.x + dx, y: p.y + dy } : p
+        p.id === pieceId
+          ? { ...p, x: p.x + dx, y: p.y + dy }
+          : p
       );
 
       return {
@@ -117,15 +119,18 @@ export default function PuzzleBoard() {
       isClear: false,
       moveCount: 0,
     });
+
     setSelectedId(null);
     dragRef.current = null;
   };
 
   return (
     <section className="puzzle-area">
-      <p className="move-count">手数：{game.moveCount}</p>
+      <div className="title-toolbar">
+        <p className="move-count">
+          手数：{game.moveCount}
+        </p>
 
-      <div className="top-buttons">
         <button
           className="reset-button"
           onClick={resetGame}
@@ -141,7 +146,9 @@ export default function PuzzleBoard() {
               key={piece.id}
               className={`piece ${piece.type} ${
                 selectedId === piece.id ? "selected" : ""
-              } ${game.isClear && piece.id === "musume" ? "escape" : ""}`}
+              } ${
+                game.isClear && piece.id === "hanna" ? "escape" : ""
+              }`}
               style={{
                 left: piece.x * CELL_SIZE,
                 top: piece.y * CELL_SIZE,
@@ -163,8 +170,12 @@ export default function PuzzleBoard() {
         <div className="clear-modal">
           <div className="clear-box">
             <p>クリア！</p>
-            <p className="clear-moves">{game.moveCount}手でクリア</p>
-            <button onClick={resetGame}>もう一度</button>
+            <p className="clear-moves">
+              {game.moveCount}手でクリア
+            </p>
+            <button onClick={resetGame}>
+              もう一度
+            </button>
           </div>
         </div>
       )}

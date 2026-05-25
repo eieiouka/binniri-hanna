@@ -1,9 +1,73 @@
 .puzzle-area {
   width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
   padding: 20px 20px 160px;
+}
+
+/* =========================
+   ▼ タイトル下ツールバー
+========================= */
+.title-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  margin-top: 48px;
+  margin-bottom: 12px;
+}
+
+.move-count {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 900;
+
+  color: white;
+
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.45);
+}
+
+.reset-button {
+  border: none;
+  border-radius: 999px;
+
+  padding: 10px 20px;
+
+  font-size: 15px;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #c084fc
+    );
+
+  box-shadow:
+    0 6px 18px rgba(139,92,246,0.35);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.reset-button:hover {
+  transform: translateY(-1px);
+}
+
+.reset-button:active {
+  transform: scale(0.96);
 }
 
 /* =========================
@@ -11,57 +75,69 @@
 ========================= */
 .puzzle-frame {
   position: relative;
+
   padding: 18px;
+
   border-radius: 18px;
 
-  /* 明るいガラス */
-  background: rgba(255, 255, 255, 0.22);
+  background:
+    rgba(255, 255, 255, 0.22);
+
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.55);
 
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.25),
     inset 0 0 25px rgba(255, 255, 255, 0.35);
 }
 
-/* ガラスの光反射（外枠） */
 .puzzle-frame::before {
   content: "";
+
   position: absolute;
+
   inset: 0;
+
   border-radius: 18px;
 
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.25),
-    rgba(255,255,255,0)
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.25),
+      rgba(255,255,255,0)
+    );
 
   pointer-events: none;
 }
 
 /* =========================
-   ▼ ガラス盤面
+   ▼ 盤面
 ========================= */
 .puzzle-board {
   width: 320px;
   height: 400px;
 
   position: relative;
+
   overflow: visible;
+
   box-sizing: content-box;
 
-  /* かなり明るくする */
-  background: rgba(255, 255, 255, 0.28);
+  background:
+    rgba(255, 255, 255, 0.28);
 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
   border-radius: 12px;
 
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.65);
 
   box-shadow:
     inset 0 0 30px rgba(255, 255, 255, 0.45),
@@ -69,88 +145,107 @@
     0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
-/* ガラスの上部ハイライト */
 .puzzle-board::before {
   content: "";
+
   position: absolute;
+
   inset: 6px 8px auto 8px;
+
   height: 40%;
 
   border-radius: 10px;
 
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0.1)
-  );
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.1)
+    );
 
   pointer-events: none;
+
   z-index: 5;
 }
 
-/* 出口（ガラスに合わせて半透明） */
 .puzzle-board::after {
   content: "";
+
   position: absolute;
+
   left: 80px;
   bottom: -18px;
+
   width: 160px;
   height: 18px;
 
-  background: rgba(255, 255, 255, 0.35);
+  background:
+    rgba(255, 255, 255, 0.35);
+
   border-radius: 0 0 10px 10px;
 
   backdrop-filter: blur(8px);
 }
 
 /* =========================
-   ▼ 駒（そのまま）
+   ▼ 駒
 ========================= */
 .piece {
   position: absolute;
+
   display: grid;
   place-items: center;
+
   border-radius: 8px;
+
   font-weight: 900;
+
   border: 2px solid #5a3216;
+
   z-index: 10;
+
   cursor: pointer;
+
   user-select: none;
+
   touch-action: none;
-  transition: left 0.12s ease, top 0.12s ease;
+
+  transition:
+    left 0.12s ease,
+    top 0.12s ease;
 }
 
-/* 選択 */
 .piece.selected {
   outline: 4px solid #ff2d55;
+
   z-index: 15;
 }
 
-/* 娘 */
 .piece.main {
   background: gold;
   color: red;
+
   font-size: 48px;
 }
 
-/* 縦 */
 .piece.vertical {
   background: skyblue;
   color: #003049;
+
   font-size: 24px;
 }
 
-/* 横 */
 .piece.horizontal {
   background: #ffb3c1;
   color: #6a040f;
+
   font-size: 22px;
 }
 
-/* 小 */
 .piece.small {
   background: lightgreen;
   color: #1b4332;
+
   font-size: 20px;
 }
 
@@ -161,9 +256,10 @@
   box-shadow: 0 0 24px gold;
 }
 
-/* 娘脱出 */
 .piece.escape {
-  animation: escapeMusume 0.9s ease-in-out forwards;
+  animation:
+    escapeMusume 0.9s ease-in-out forwards;
+
   z-index: 25;
 }
 
@@ -171,9 +267,11 @@
   0% {
     transform: translateY(0);
   }
+
   45% {
     transform: translateY(24px);
   }
+
   100% {
     transform: translateY(150px);
   }
@@ -184,38 +282,59 @@
 ========================= */
 .clear-modal {
   position: fixed;
+
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+
+  background:
+    rgba(0, 0, 0, 0.6);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   z-index: 100;
-  animation: fadeIn 0.3s ease;
+
+  animation:
+    fadeIn 0.3s ease;
 }
 
 .clear-box {
   background: #fff;
   color: #111;
+
   padding: 30px 40px;
+
   border-radius: 16px;
+
   text-align: center;
+
   font-weight: 900;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  animation: popIn 0.3s ease;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.4);
+
+  animation:
+    popIn 0.3s ease;
 }
 
 .clear-box p {
   font-size: 32px;
+
   margin: 0 0 20px;
 }
 
 .clear-box button {
   padding: 12px 24px;
+
   border: none;
   border-radius: 999px;
+
   font-weight: 900;
+
   cursor: pointer;
+
   background: #ff2d55;
+
   color: white;
 }
 
@@ -223,64 +342,46 @@
    ▼ アニメ
 ========================= */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes popIn {
   from {
     transform: scale(0.8);
+
     opacity: 0;
   }
+
   to {
     transform: scale(1);
+
     opacity: 1;
   }
 }
 
 /* =========================
-   ▼ 手数
+   ▼ スマホ
 ========================= */
-.move-count {
-  font-weight: 900;
-  margin-bottom: 10px;
-  font-size: 20px;
-}
+@media (max-width: 768px) {
+  .title-toolbar {
+    gap: 10px;
 
-.top-buttons {
-  margin-bottom: 14px;
-}
+    margin-bottom: 8px;
+  }
 
-.reset-button {
-  border: none;
-  border-radius: 999px;
-  padding: 12px 24px;
+  .move-count {
+    font-size: 16px;
+  }
 
-  font-size: 16px;
-  font-weight: 900;
+  .reset-button {
+    padding: 8px 16px;
 
-  background: linear-gradient(
-    135deg,
-    #8b5cf6,
-    #c084fc
-  );
-
-  color: white;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 8px 20px rgba(139, 92, 246, 0.35);
-
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
-}
-
-.reset-button:hover {
-  transform: translateY(-2px);
-}
-
-.reset-button:active {
-  transform: scale(0.96);
+    font-size: 13px;
+  }
 }
