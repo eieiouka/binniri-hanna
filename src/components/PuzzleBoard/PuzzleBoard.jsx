@@ -125,6 +125,15 @@ export default function PuzzleBoard() {
     <section className="puzzle-area">
       <p className="move-count">手数：{game.moveCount}</p>
 
+      <div className="top-buttons">
+        <button
+          className="reset-button"
+          onClick={resetGame}
+        >
+          リセット
+        </button>
+      </div>
+
       <div className="puzzle-frame">
         <div className={`puzzle-board ${game.isClear ? "clear" : ""}`}>
           {game.pieces.map((piece) => (

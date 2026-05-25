@@ -2,11 +2,23 @@
   box-sizing: border-box;
 }
 
-body {
+html,
+body,
+#root {
   margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
   font-family: sans-serif;
-  background: #111;
   color: #fff;
+
+  background-image: url("/images/background.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: auto 100vh;
+  background-color: #111;
 }
 
 .app {
@@ -14,26 +26,10 @@ body {
   min-height: 100vh;
 }
 
-/* ▼ ヘッダー */
-.app-header {
-  text-align: center;
-  padding: 24px 16px;
-}
-
-.app-header h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.app-desc {
-  margin-top: 8px;
-  color: #aaa;
-  font-size: 14px;
-}
-
-/* ▼ メイン */
 .app-main {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 20px;
 }
