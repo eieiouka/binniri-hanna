@@ -42,7 +42,9 @@ body {
 
   color: white;
 
-  font-size: clamp(28px, 4vw, 54px);
+  font-size: clamp(18px, 2vw, 25px);
+
+  white-space: nowrap;
 
   letter-spacing: 0.04em;
 
@@ -99,17 +101,19 @@ body {
 
 @media (max-width: 768px) {
   .game-title {
-    font-size: 24px !important;
+    font-size: clamp(16px, 4.8vw, 25px) !important;
 
     width: calc(100% - 8px);
 
     max-width: none;
 
-    padding: 12px 10px;
+    padding: 12px 8px;
 
     margin-top: 8px;
 
     border-radius: 18px;
+
+    white-space: nowrap;
   }
 
   .title-green,
