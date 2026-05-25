@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./PuzzleBoard.css";
 import initialPieces from "../../data/initialPieces";
 
@@ -7,18 +7,21 @@ const COLS = 4;
 const ROWS = 5;
 
 export default function PuzzleBoard() {
-  const [pieces, setPieces] = useState(initialPieces);
-  const [selectedId, setSelectedId] = useState(null);
-  const [dragStart, setDragStart] = useState(null);
-  const [isClear, setIsClear] = useState(false);
+  const [game, setGame] = useState({
+    pieces: initialPieces,
+    isClear: false,
+    moveCount: 0,
+  });
 
-  const checkClear = (nextPieces) => {
-    const musume = nextPieces.find((p) => p.id === "musume");
+  const [selectedId, setSelectedId] = useState(null);
+  const dragRef = useRef(null);
+
+  const checkClear = (pieces) => {
+    const musume = pieces.find((p) => p.id === "musume");
     return musume && musume.x === 1 && musume.y >= 3;
   };
 
-  // 🔥 修正版：娘だけ出口から外に出られる
-  const canMove = (targetPiece, dx, dy, currentPieces) => {
+  const canMove = (targetPiece, dx, dy, pieces) => {
     const nextX = targetPiece.x + dx;
     const nextY = targetPiece.y + dy;
 
@@ -33,11 +36,9 @@ export default function PuzzleBoard() {
       nextX + targetPiece.w <= COLS &&
       nextY + targetPiece.h <= ROWS;
 
-    if (!isInsideBoard && !isMusumeEscaping) {
-      return false;
-    }
+    if (!isInsideBoard && !isMusumeEscaping) return false;
 
-    return !currentPieces.some((other) => {
+    return !pieces.some((other) => {
       if (other.id === targetPiece.id) return false;
 
       return (
@@ -50,78 +51,88 @@ export default function PuzzleBoard() {
   };
 
   const movePiece = (pieceId, dx, dy) => {
-    if (isClear) return;
+    setGame((prev) => {
+      if (prev.isClear) return prev;
 
-    setPieces((prev) => {
-      const target = prev.find((p) => p.id === pieceId);
+      const target = prev.pieces.find((p) => p.id === pieceId);
       if (!target) return prev;
-      if (!canMove(target, dx, dy, prev)) return prev;
+      if (!canMove(target, dx, dy, prev.pieces)) return prev;
 
-      const nextPieces = prev.map((p) =>
+      const nextPieces = prev.pieces.map((p) =>
         p.id === pieceId ? { ...p, x: p.x + dx, y: p.y + dy } : p
       );
 
-      if (checkClear(nextPieces)) {
-        setIsClear(true);
-      }
-
-      return nextPieces;
+      return {
+        pieces: nextPieces,
+        moveCount: prev.moveCount + 1,
+        isClear: checkClear(nextPieces),
+      };
     });
   };
 
   const handlePointerDown = (e, piece) => {
-    if (isClear) return;
+    if (game.isClear) return;
 
     e.currentTarget.setPointerCapture(e.pointerId);
-
     setSelectedId(piece.id);
-    setDragStart({
+
+    dragRef.current = {
+      pointerId: e.pointerId,
       pieceId: piece.id,
-      x: e.clientX,
-      y: e.clientY,
-    });
+      startX: e.clientX,
+      startY: e.clientY,
+      moved: false,
+    };
   };
 
-  const handlePointerUp = (e) => {
-    if (!dragStart || isClear) return;
+  const handlePointerMove = (e) => {
+    const drag = dragRef.current;
+    if (!drag || drag.moved || game.isClear) return;
+    if (drag.pointerId !== e.pointerId) return;
 
-    const dx = e.clientX - dragStart.x;
-    const dy = e.clientY - dragStart.y;
+    const dx = e.clientX - drag.startX;
+    const dy = e.clientY - drag.startY;
 
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
-    if (absX < 20 && absY < 20) {
-      setDragStart(null);
-      return;
-    }
+    if (absX < 20 && absY < 20) return;
+
+    drag.moved = true;
 
     if (absX > absY) {
-      movePiece(dragStart.pieceId, dx > 0 ? 1 : -1, 0);
+      movePiece(drag.pieceId, dx > 0 ? 1 : -1, 0);
     } else {
-      movePiece(dragStart.pieceId, 0, dy > 0 ? 1 : -1);
+      movePiece(drag.pieceId, 0, dy > 0 ? 1 : -1);
     }
+  };
 
-    setDragStart(null);
+  const handlePointerUp = () => {
+    dragRef.current = null;
   };
 
   const resetGame = () => {
-    setPieces(initialPieces);
+    setGame({
+      pieces: initialPieces,
+      isClear: false,
+      moveCount: 0,
+    });
     setSelectedId(null);
-    setDragStart(null);
-    setIsClear(false);
+    dragRef.current = null;
   };
 
   return (
     <section className="puzzle-area">
+      <p className="move-count">手数：{game.moveCount}</p>
+
       <div className="puzzle-frame">
-        <div className={`puzzle-board ${isClear ? "clear" : ""}`}>
-          {pieces.map((piece) => (
+        <div className={`puzzle-board ${game.isClear ? "clear" : ""}`}>
+          {game.pieces.map((piece) => (
             <button
               key={piece.id}
               className={`piece ${piece.type} ${
                 selectedId === piece.id ? "selected" : ""
-              } ${isClear && piece.id === "musume" ? "escape" : ""}`}
+              } ${game.isClear && piece.id === "musume" ? "escape" : ""}`}
               style={{
                 left: piece.x * CELL_SIZE,
                 top: piece.y * CELL_SIZE,
@@ -129,7 +140,9 @@ export default function PuzzleBoard() {
                 height: piece.h * CELL_SIZE,
               }}
               onPointerDown={(e) => handlePointerDown(e, piece)}
+              onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
             >
               {piece.label}
             </button>
@@ -137,11 +150,11 @@ export default function PuzzleBoard() {
         </div>
       </div>
 
-      {/* 🔥 中央モーダル */}
-      {isClear && (
+      {game.isClear && (
         <div className="clear-modal">
           <div className="clear-box">
             <p>クリア！</p>
+            <p className="clear-moves">{game.moveCount}手でクリア</p>
             <button onClick={resetGame}>もう一度</button>
           </div>
         </div>
