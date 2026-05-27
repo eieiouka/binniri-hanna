@@ -254,17 +254,35 @@ body {
    ▼ スマホ
 ========================= */
 @media (max-width: 768px) {
+  .game-stage {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .game-stage::before {
+    top: -8px;
+
+    background-position: center top;
+    background-size: auto calc(100vh + 8px);
+  }
+
   .game-title {
+    position: relative;
+
+    left: auto;
+    top: auto;
+
+    transform: none;
+
     font-size:
       clamp(16px, 4.8vw, 25px) !important;
 
     width: calc(100% - 4px);
-
     max-width: none;
 
     padding: 12px 4px;
 
-    margin-top: 8px;
+    margin: 8px auto 0;
 
     border-radius: 18px;
 
@@ -276,10 +294,31 @@ body {
     display: inline;
   }
 
-  body {
-    background-position: center top;
+  .app-main {
+    position: relative;
 
-    background-size:
-      auto calc(100vh - 10px);
+    left: auto;
+    top: auto;
+
+    transform: none;
+
+    padding: 0;
+  }
+
+  .title-toolbar {
+    gap: 10px;
+
+    margin-top: 80px;
+    margin-bottom: 8px;
+  }
+
+  .move-count {
+    font-size: 16px;
+  }
+
+  .reset-button {
+    padding: 8px 16px;
+
+    font-size: 13px;
   }
 }

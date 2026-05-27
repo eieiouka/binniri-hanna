@@ -369,32 +369,20 @@
    ▼ スマホ
 ========================= */
 @media (max-width: 768px) {
-  .game-title {
-    font-size:
-      clamp(16px, 4.8vw, 25px) !important;
+  .title-toolbar {
+    gap: 10px;
 
-    width: calc(100% - 4px);
-
-    max-width: none;
-
-    padding: 12px 4px;
-
-    margin-top: 8px;
-
-    border-radius: 18px;
-
-    white-space: nowrap;
+    margin-top: 80px;
+    margin-bottom: 8px;
   }
 
-  .title-green,
-  .title-rest {
-    display: inline;
+  .move-count {
+    font-size: 16px;
   }
 
-  body {
-    background-position: center top;
+  .reset-button {
+    padding: 8px 16px;
 
-    background-size:
-      auto calc(100vh - 10px);
+    font-size: 13px;
   }
 }
