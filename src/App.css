@@ -53,7 +53,7 @@ body {
   background-position: center center;
 
   /* ▼ PCは固定サイズ */
-  background-size: auto 900px;
+  background-size: auto 580px;
 
   z-index: 0;
 }
@@ -118,6 +118,9 @@ body {
     0 0 12px rgba(0, 0, 0, 0.45),
     0 4px 18px rgba(0, 0, 0, 0.45),
     0 0 28px rgba(0, 0, 0, 0.45);
+
+  transition:
+    filter 0.25s ease;
 }
 
 .title-green {
@@ -146,6 +149,105 @@ body {
     translate(-50%, calc(-50% + 90px));
 
   z-index: 1;
+
+  transition:
+    filter 0.25s ease;
+}
+
+/* =========================
+   ▼ 開始前ぼかし
+========================= */
+.game-stage.before-start .game-title,
+.game-stage.before-start .app-main {
+  filter: blur(6px);
+}
+
+/* =========================
+   ▼ 開始オーバーレイ
+========================= */
+.start-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background:
+    rgba(0, 0, 0, 0.45);
+
+  z-index: 100;
+}
+
+.start-popup {
+  padding: 32px 42px;
+
+  border-radius: 24px;
+
+  text-align: center;
+
+  background:
+    rgba(20, 14, 36, 0.78);
+
+  border:
+    2px solid
+    rgba(255, 255, 255, 0.35);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 0 32px rgba(0, 0, 0, 0.45),
+    inset 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+.start-title {
+  margin: 0 0 22px;
+
+  font-size: 24px;
+  font-weight: 900;
+
+  color: white;
+
+  text-shadow:
+    0 0 14px rgba(0, 0, 0, 0.6);
+}
+
+.start-button {
+  border: none;
+  border-radius: 999px;
+
+  padding: 14px 34px;
+
+  font-size: 20px;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #ec4899
+    );
+
+  box-shadow:
+    0 8px 24px rgba(236, 72, 153, 0.35);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.start-button:hover {
+  transform: translateY(-2px);
+}
+
+.start-button:active {
+  transform: scale(0.96);
 }
 
 /* =========================
@@ -179,5 +281,21 @@ body {
   .title-green,
   .title-rest {
     display: inline;
+  }
+
+  .start-popup {
+    width: calc(100% - 40px);
+
+    padding: 28px 20px;
+  }
+
+  .start-title {
+    font-size: 20px;
+  }
+
+  .start-button {
+    font-size: 18px;
+
+    padding: 13px 28px;
   }
 }
