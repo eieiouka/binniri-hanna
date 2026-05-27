@@ -1,6 +1,6 @@
 const initialPieces = [
   {
-    id: "musume",
+    id: "hanna",
     label: "娘",
     image: "/images/pieces/musume.png",
     x: 1,
