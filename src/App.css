@@ -261,10 +261,20 @@ body {
     background-size: auto 760px;
   }
 
+  /* ▼ タイトルを通常配置へ戻す */
   .game-title {
+    position: relative;
+
+    left: auto;
+    top: auto;
+
+    transform: none;
+
     width: calc(100% - 4px);
 
     max-width: none;
+
+    margin: 8px auto 0;
 
     padding: 12px 4px;
 
@@ -272,15 +282,21 @@ body {
 
     font-size:
       clamp(16px, 4.8vw, 25px) !important;
-
-    transform:
-      translateX(-50%)
-      translateY(calc(-50% - 290px));
   }
 
   .title-green,
   .title-rest {
     display: inline;
+  }
+
+  /* ▼ 盤面も通常中央配置 */
+  .app-main {
+    position: absolute;
+
+    left: 50%;
+    top: 56%;
+
+    transform: translate(-50%, -50%);
   }
 
   .start-popup {
