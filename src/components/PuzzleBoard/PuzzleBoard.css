@@ -381,14 +381,14 @@
 }
 
 .horizontal-image {
-  width: 107%;
-  height: 107%;
+  width: 108%;
+  height: 108%;
 
   display: block;
 
   object-fit: cover;
 
-  transform: translateY(2%);
+  transform: translateY(1%);
 
   pointer-events: none;
   user-select: none;
