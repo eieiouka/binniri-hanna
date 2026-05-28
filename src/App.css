@@ -106,8 +106,8 @@ body {
   background:
     linear-gradient(
       135deg,
-      rgba(10, 10, 10, 0.45),
-      rgba(0, 0, 0, 0.45)
+      rgb(100, 100, 100),
+      rgb(0, 0, 0)
     );
 
   backdrop-filter: blur(10px);
