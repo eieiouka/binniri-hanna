@@ -1,7 +1,7 @@
 const initialPieces = [
   {
     id: "hanna",
-    label: "娘",
+    label: "ハンナ",
     image: "/images/pieces/musume.png",
     x: 1,
     y: 0,
@@ -11,8 +11,8 @@ const initialPieces = [
   },
 
   {
-    id: "chichi",
-    label: "父親",
+    id: "vertical_obstacle1",
+    label: "縦障害物1",
     image: "/images/pieces/vertical_obstacle1.png",
     x: 0,
     y: 0,
@@ -21,8 +21,8 @@ const initialPieces = [
     type: "vertical",
   },
   {
-    id: "haha",
-    label: "母親",
+    id: "vertical_obstacle2",
+    label: "縦障害物2",
     image: "/images/pieces/vertical_obstacle2.png",
     x: 3,
     y: 0,
@@ -32,8 +32,8 @@ const initialPieces = [
   },
 
   {
-    id: "sofu",
-    label: "祖父",
+    id: "vertical_obstacle3",
+    label: "縦障害物3",
     image: "/images/pieces/vertical_obstacle3.png",
     x: 0,
     y: 2,
@@ -42,8 +42,8 @@ const initialPieces = [
     type: "vertical",
   },
   {
-    id: "sobo",
-    label: "祖母",
+    id: "vertical_obstacle4",
+    label: "縦障害物4",
     image: "/images/pieces/vertical_obstacle4.png",
     x: 3,
     y: 2,
@@ -53,9 +53,9 @@ const initialPieces = [
   },
 
   {
-    id: "kyoudai",
-    label: "兄弟",
-    image: "/images/pieces/kyoudai.png",
+    id: "horizontal_obstacle",
+    label: "横障害物",
+    image: "/images/pieces/horizontal_obstacle.png",
     x: 1,
     y: 2,
     w: 2,

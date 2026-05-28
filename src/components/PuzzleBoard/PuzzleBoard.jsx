@@ -172,6 +172,8 @@ export default function PuzzleBoard() {
                     className={`piece-image ${
                       piece.type === "vertical"
                         ? "vertical-image"
+                        : piece.type === "horizontal"
+                        ? "horizontal-image"
                         : ""
                     }`}
                     src={piece.image}

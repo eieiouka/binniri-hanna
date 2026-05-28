@@ -196,6 +196,8 @@
   display: grid;
   place-items: center;
 
+  overflow: hidden;
+
   border-radius: 8px;
 
   font-weight: 900;
@@ -373,6 +375,20 @@
   object-fit: contain;
 
   transform: translateY(-1%);
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.horizontal-image {
+  width: 107%;
+  height: 107%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transform: translateY(2%);
 
   pointer-events: none;
   user-select: none;
