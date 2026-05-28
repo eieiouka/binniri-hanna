@@ -167,9 +167,13 @@ export default function PuzzleBoard() {
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
               >
-                {piece.type === "small" ? (
+                {piece.image ? (
                   <img
-                    className="piece-image"
+                    className={`piece-image ${
+                      piece.type === "vertical"
+                        ? "vertical-image"
+                        : ""
+                    }`}
                     src={piece.image}
                     alt=""
                     draggable="false"

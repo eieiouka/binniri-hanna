@@ -229,10 +229,12 @@
 }
 
 .piece.vertical {
-  background: skyblue;
-  color: #003049;
+  background: transparent;
+  color: transparent;
 
-  font-size: 24px;
+  font-size: 0;
+
+  overflow: hidden;
 }
 
 .piece.horizontal {
@@ -357,6 +359,20 @@
   object-fit: contain;
 
   transform: translateY(-1.5%);
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.vertical-image {
+  width: 124%;
+  height: 124%;
+
+  display: block;
+
+  object-fit: contain;
+
+  transform: translateY(-1%);
 
   pointer-events: none;
   user-select: none;

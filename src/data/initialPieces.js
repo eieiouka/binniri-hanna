@@ -13,7 +13,7 @@ const initialPieces = [
   {
     id: "chichi",
     label: "父親",
-    image: "/images/pieces/chichi.png",
+    image: "/images/pieces/vertical_obstacle1.png",
     x: 0,
     y: 0,
     w: 1,
@@ -23,7 +23,7 @@ const initialPieces = [
   {
     id: "haha",
     label: "母親",
-    image: "/images/pieces/haha.png",
+    image: "/images/pieces/vertical_obstacle2.png",
     x: 3,
     y: 0,
     w: 1,
@@ -34,7 +34,7 @@ const initialPieces = [
   {
     id: "sofu",
     label: "祖父",
-    image: "/images/pieces/sofu.png",
+    image: "/images/pieces/vertical_obstacle3.png",
     x: 0,
     y: 2,
     w: 1,
@@ -44,7 +44,7 @@ const initialPieces = [
   {
     id: "sobo",
     label: "祖母",
-    image: "/images/pieces/sobo.png",
+    image: "/images/pieces/vertical_obstacle4.png",
     x: 3,
     y: 2,
     w: 1,
