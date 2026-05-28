@@ -141,28 +141,45 @@ export default function PuzzleBoard() {
 
       <div className="puzzle-frame">
         <div className={`puzzle-board ${game.isClear ? "clear" : ""}`}>
-          {game.pieces.map((piece) => (
-            <button
-              key={piece.id}
-              className={`piece ${piece.type} ${
-                selectedId === piece.id ? "selected" : ""
-              } ${
-                game.isClear && piece.id === "hanna" ? "escape" : ""
-              }`}
-              style={{
-                left: piece.x * CELL_SIZE,
-                top: piece.y * CELL_SIZE,
-                width: piece.w * CELL_SIZE,
-                height: piece.h * CELL_SIZE,
-              }}
-              onPointerDown={(e) => handlePointerDown(e, piece)}
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-              onPointerCancel={handlePointerUp}
-            >
-              {piece.label}
-            </button>
-          ))}
+          {game.pieces.map((piece) => {
+            console.log(piece.id, piece.image);
+
+            return (
+              <button
+                key={piece.id}
+                className={`piece ${piece.type} ${
+                  selectedId === piece.id ? "selected" : ""
+                } ${
+                  game.isClear && piece.id === "hanna"
+                    ? "escape"
+                    : ""
+                }`}
+                style={{
+                  left: piece.x * CELL_SIZE,
+                  top: piece.y * CELL_SIZE,
+                  width: piece.w * CELL_SIZE,
+                  height: piece.h * CELL_SIZE,
+                }}
+                onPointerDown={(e) =>
+                  handlePointerDown(e, piece)
+                }
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+              >
+                {piece.type === "small" ? (
+                  <img
+                    className="piece-image"
+                    src={piece.image}
+                    alt=""
+                    draggable="false"
+                  />
+                ) : (
+                  piece.label
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -170,9 +187,11 @@ export default function PuzzleBoard() {
         <div className="clear-modal">
           <div className="clear-box">
             <p>クリア！</p>
+
             <p className="clear-moves">
               {game.moveCount}手でクリア
             </p>
+
             <button onClick={resetGame}>
               もう一度
             </button>

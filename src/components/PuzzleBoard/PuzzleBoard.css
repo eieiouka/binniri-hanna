@@ -243,10 +243,11 @@
 }
 
 .piece.small {
-  background: lightgreen;
-  color: #1b4332;
+  background: transparent;
 
-  font-size: 20px;
+  color: transparent;
+
+  font-size: 0;
 }
 
 /* =========================
@@ -336,6 +337,27 @@
   background: #ff2d55;
 
   color: white;
+}
+
+.piece.small {
+  background: transparent;
+  color: transparent;
+
+  font-size: 0;
+
+  overflow: hidden;
+}
+
+.piece-image {
+  width: 120%;
+  height: 120%;
+
+  display: block;
+
+  object-fit: contain;
+
+  pointer-events: none;
+  user-select: none;
 }
 
 /* =========================
