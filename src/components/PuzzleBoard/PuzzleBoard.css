@@ -356,6 +356,8 @@
 
   object-fit: contain;
 
+  transform: translateY(-1.5%);
+
   pointer-events: none;
   user-select: none;
 }
