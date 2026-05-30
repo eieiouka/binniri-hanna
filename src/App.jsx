@@ -60,9 +60,17 @@ function App() {
         {!isStarted && (
           <div className="start-overlay">
             <div className="start-popup">
-              <p className="start-title">
-                遠野ハンナを救出する
-              </p>
+              <div className="start-message">
+                <img
+                  className="start-character-icon"
+                  src="/images/sherry-icon.png"
+                  alt="シェリー"
+                />
+
+                <p className="start-dialogue">
+                  ハンナさんが魔女化する前に、助けてあげたいです！
+                </p>
+              </div>
 
               <button
                 className="start-button"

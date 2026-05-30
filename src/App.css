@@ -26,6 +26,48 @@ body {
   overflow: hidden;
 }
 
+.start-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  margin: 0 0 22px;
+}
+
+.start-character-icon {
+  width: 72px;
+  height: 72px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 3px solid rgba(255, 255, 255, 0.7);
+
+  box-shadow:
+    0 0 16px rgba(125, 211, 252, 0.45);
+}
+
+.start-dialogue {
+  margin: 0;
+
+  max-width: 360px;
+
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.5;
+
+  color: #7dd3fc;
+
+  text-align: left;
+
+  text-shadow:
+    0 0 10px rgba(125, 211, 252, 0.45),
+    0 0 18px rgba(0, 0, 0, 0.65);
+}
+
 /* =========================
    ▼ ステージ全体
 ========================= */
