@@ -10,7 +10,7 @@ import {
 const CELL_SIZE = 80;
 const COLS = 4;
 const ROWS = 5;
-const GAME_OVER_MOVE = 120;
+const GAME_OVER_MOVE = 117;
 const HANNA_IMAGE_STEP = 20;
 const BGM_SRC = "/sounds/bgm_loop.mp3";
 
@@ -392,7 +392,7 @@ export default function PuzzleBoard() {
               />
 
               <p className="gameover-dialogue">
-                ハンナさん…。手遅れみたいですね…。（120手到達）
+                ハンナさん…。手遅れみたいですね…。（117手到達）
               </p>
             </div>
 
