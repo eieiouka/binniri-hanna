@@ -354,7 +354,19 @@ export default function PuzzleBoard() {
       {game.isClear && (
         <div className="clear-modal">
           <div className="clear-box">
-            <p>クリア！</p>
+            <div className="gameover-message">
+              <img
+                className="gameover-character-icon"
+                src="/images/sherry-icon.png"
+                alt="シェリー"
+              />
+
+              <p className="gameover-dialogue">
+                置き去りが嫌だって言ったので、
+                <br />
+                一緒に逝きましょう！
+              </p>
+            </div>
 
             <p className="clear-moves">
               {game.moveCount}手でクリア
@@ -370,11 +382,17 @@ export default function PuzzleBoard() {
       {game.isGameOver && (
         <div className="clear-modal">
           <div className="clear-box">
-            <p>ゲームオーバー</p>
+            <div className="gameover-message">
+              <img
+                className="gameover-character-icon"
+                src="/images/sherry-icon.png"
+                alt="シェリー"
+              />
 
-            <p className="clear-moves">
-              120手に到達しました
-            </p>
+              <p className="gameover-dialogue">
+                ハンナさん…。もう手遅れみたいですね…。（120手到達）
+              </p>
+            </div>
 
             <button onClick={resetGame}>
               もう一度

@@ -363,19 +363,29 @@
 }
 
 .clear-box {
-  background: #fff;
-  color: #111;
-
   padding: 30px 40px;
 
-  border-radius: 16px;
+  border-radius: 24px;
 
   text-align: center;
 
   font-weight: 900;
 
+  color: white;
+
+  background:
+    rgba(20, 14, 36, 0.78);
+
+  border:
+    2px solid
+    rgba(255, 255, 255, 0.35);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
   box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.4);
+    0 0 32px rgba(0, 0, 0, 0.45),
+    inset 0 0 20px rgba(255, 255, 255, 0.08);
 
   animation:
     popIn 0.3s ease;
@@ -397,9 +407,21 @@
 
   cursor: pointer;
 
-  background: #ff2d55;
-
   color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #ec4899
+    );
+
+  box-shadow:
+    0 8px 24px rgba(236, 72, 153, 0.35);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .piece.small {
@@ -465,6 +487,48 @@
 
   object-fit: cover;
   object-position: center;
+}
+
+.gameover-message {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  margin-bottom: 20px;
+}
+
+.gameover-character-icon {
+  width: 72px;
+  height: 72px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 3px solid rgba(255, 255, 255, 0.7);
+
+  box-shadow:
+    0 0 16px rgba(125, 211, 252, 0.35);
+}
+
+.gameover-dialogue {
+  margin: 0 !important;
+
+  font-size: 24px !important;
+
+  font-weight: 900;
+
+  line-height: 1.5;
+
+  color: #7dd3fc;
+
+  text-align: left;
+
+  text-shadow:
+    0 0 8px rgba(125, 211, 252, 0.35);
 }
 
 /* =========================
