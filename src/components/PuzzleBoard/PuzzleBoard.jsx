@@ -243,13 +243,13 @@ export default function PuzzleBoard() {
                   <img
                     key={
                       piece.id === "hanna"
-                        ? Math.floor(
-                            game.moveCount / HANNA_IMAGE_STEP
-                          )
+                        ? Math.floor(game.moveCount / HANNA_IMAGE_STEP)
                         : piece.id
                     }
                     className={`${getPieceImageClassName(piece)} ${
-                      piece.id === "hanna"
+                      piece.id === "hanna" &&
+                      game.moveCount > 0 &&
+                      game.moveCount % HANNA_IMAGE_STEP === 0
                         ? "image-change-effect"
                         : ""
                     }`}
