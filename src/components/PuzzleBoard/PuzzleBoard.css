@@ -224,7 +224,7 @@
 }
 
 .piece.main {
-  background: gold;
+  background: #777;
   color: red;
 
   font-size: 48px;
@@ -252,6 +252,65 @@
   color: transparent;
 
   font-size: 0;
+}
+
+.piece.hanna-red-glow {
+  animation: hannaPieceRedGlow 0.6s ease;
+}
+
+.piece.hanna-red-glow::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 20;
+
+  border-radius: 8px;
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  background: rgba(255, 0, 0, 0.4);
+
+  animation: hannaRedOverlay 0.6s ease;
+}
+
+@keyframes hannaRedOverlay {
+  0% {
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hannaRedOverlay {
+  0% {
+    opacity: 0;
+  }
+
+  45% {
+    opacity: 1;
+  }
+
+  99% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 /* =========================
@@ -408,29 +467,6 @@
   object-position: center;
 }
 
-.image-change-effect {
-  animation: hannaImageChange 0.6s ease;
-}
-
-@keyframes hannaImageChange {
-  0% {
-    filter: none;
-  }
-
-  50% {
-    filter:
-      brightness(1.1)
-      saturate(3)
-      hue-rotate(-40deg)
-      drop-shadow(0 0 28px rgba(255, 0, 0, 1))
-      drop-shadow(0 0 56px rgba(255, 0, 0, 0.9));
-  }
-
-  100% {
-    filter: none;
-  }
-}
-
 /* =========================
    ▼ アニメ
 ========================= */
@@ -455,20 +491,6 @@
     transform: scale(1);
 
     opacity: 1;
-  }
-}
-
-@keyframes hannaRedFlash {
-  0% {
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
   }
 }
 

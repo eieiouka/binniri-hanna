@@ -216,6 +216,11 @@ export default function PuzzleBoard() {
                 ? getHannaImage(piece, game.moveCount)
                 : piece.image;
 
+            const shouldHannaGlow =
+              piece.id === "hanna" &&
+              game.moveCount > 0 &&
+              game.moveCount % HANNA_IMAGE_STEP === 0;
+
             return (
               <button
                 key={piece.id}
@@ -225,6 +230,8 @@ export default function PuzzleBoard() {
                   game.isClear && piece.id === "hanna"
                     ? "escape"
                     : ""
+                } ${
+                  shouldHannaGlow ? "hanna-red-glow" : ""
                 }`}
                 style={{
                   left: piece.x * CELL_SIZE,
@@ -248,13 +255,7 @@ export default function PuzzleBoard() {
                           )
                         : piece.id
                     }
-                    className={`${getPieceImageClassName(piece)} ${
-                      piece.id === "hanna" &&
-                      game.moveCount > 0 &&
-                      game.moveCount % HANNA_IMAGE_STEP === 0
-                        ? "image-change-effect"
-                        : ""
-                    }`}
+                    className={getPieceImageClassName(piece)}
                     src={imageSrc}
                     alt=""
                     draggable="false"
