@@ -17,8 +17,10 @@ function App() {
     try {
       await unlockAudio();
 
-      await preloadAudio([
-        "/sounds/hanna_start.mp3",
+      await startBgm("/sounds/bgm_loop.mp3");
+      await playVoice("/sounds/hanna_start.mp3");
+
+      preloadAudio([
         "/sounds/hanna10.mp3",
         "/sounds/hanna20.mp3",
         "/sounds/hanna30.mp3",
@@ -30,10 +32,9 @@ function App() {
         "/sounds/hanna90.mp3",
         "/sounds/hanna100.mp3",
         "/sounds/hanna110.mp3",
-      ]);
-
-      await playVoice("/sounds/hanna_start.mp3");
-      await startBgm("/sounds/bgm_loop.mp3");
+      ]).catch((error) => {
+        console.log("音声プリロード失敗", error);
+      });
     } catch (error) {
       console.log("音声の再生に失敗しました", error);
     }
