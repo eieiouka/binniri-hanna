@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./PuzzleBoard.css";
 import initialPieces from "../../data/initialPieces";
 
@@ -18,6 +18,19 @@ export default function PuzzleBoard() {
 
   const [selectedId, setSelectedId] = useState(null);
   const dragRef = useRef(null);
+
+  useEffect(() => {
+    initialPieces.forEach((piece) => {
+      if (!piece.images) {
+        return;
+      }
+
+      piece.images.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+    });
+  }, []);
 
   const checkClear = (pieces) => {
     const hanna = pieces.find((p) => p.id === "hanna");
