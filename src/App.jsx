@@ -1,24 +1,41 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import PuzzleBoard from "./components/PuzzleBoard/PuzzleBoard";
+import {
+  playVoice,
+  preloadAudio,
+  startBgm,
+  unlockAudio,
+} from "./audio/audioMixer";
 
 function App() {
-  const audioRef = useRef(null);
   const [isStarted, setIsStarted] = useState(false);
 
   const startGame = async () => {
     setIsStarted(true);
 
-    if (!audioRef.current) {
-      audioRef.current = new Audio("/sounds/bgm_loop.mp3");
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.45;
-    }
-
     try {
-      await audioRef.current.play();
+      await unlockAudio();
+
+      await preloadAudio([
+        "/sounds/hanna_start.mp3",
+        "/sounds/hanna10.mp3",
+        "/sounds/hanna20.mp3",
+        "/sounds/hanna30.mp3",
+        "/sounds/hanna40.mp3",
+        "/sounds/hanna50.mp3",
+        "/sounds/hanna60.mp3",
+        "/sounds/hanna70.mp3",
+        "/sounds/hanna80.mp3",
+        "/sounds/hanna90.mp3",
+        "/sounds/hanna100.mp3",
+        "/sounds/hanna110.mp3",
+      ]);
+
+      await playVoice("/sounds/hanna_start.mp3");
+      await startBgm("/sounds/bgm_loop.mp3");
     } catch (error) {
-      console.log("BGMの再生に失敗しました", error);
+      console.log("音声の再生に失敗しました", error);
     }
   };
 

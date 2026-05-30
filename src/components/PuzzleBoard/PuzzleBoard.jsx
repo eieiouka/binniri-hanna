@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./PuzzleBoard.css";
 import initialPieces from "../../data/initialPieces";
+import { playVoice } from "../../audio/audioMixer";
 
 const CELL_SIZE = 80;
 const COLS = 4;
@@ -18,6 +19,7 @@ export default function PuzzleBoard() {
 
   const [selectedId, setSelectedId] = useState(null);
   const dragRef = useRef(null);
+  const lastVoiceMoveRef = useRef(0);
 
   useEffect(() => {
     initialPieces.forEach((piece) => {
@@ -31,6 +33,21 @@ export default function PuzzleBoard() {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (
+      game.moveCount > 0 &&
+      game.moveCount % 10 === 0 &&
+      game.moveCount <= 110 &&
+      lastVoiceMoveRef.current !== game.moveCount
+    ) {
+      lastVoiceMoveRef.current = game.moveCount;
+
+      playVoice(
+        `/sounds/hanna${game.moveCount}.mp3`
+      ).catch(() => {});
+    }
+  }, [game.moveCount]);
 
   const checkClear = (pieces) => {
     const hanna = pieces.find((p) => p.id === "hanna");
@@ -200,6 +217,10 @@ export default function PuzzleBoard() {
 
     setSelectedId(null);
     dragRef.current = null;
+    lastVoiceMoveRef.current = 0;
+
+    playVoice("/sounds/hanna_start.mp3")
+      .catch(() => {});
   };
 
   return (
