@@ -107,41 +107,65 @@ export const stopBgm = () => {
   bgmSource = null;
 };
 
+let voiceToken = 0;
+
 export const playVoice = async (src) => {
   const ctx = getAudioContext();
 
   await unlockAudio();
 
+  voiceToken += 1;
+  const myVoiceToken = voiceToken;
+
   if (currentVoiceSource) {
+    const oldSource = currentVoiceSource;
+    currentVoiceSource = null;
+
+    oldSource.onended = null;
+
     try {
-      currentVoiceSource.stop();
+      oldSource.stop();
     } catch {
       //
     }
 
-    currentVoiceSource.disconnect();
-    currentVoiceSource = null;
+    try {
+      oldSource.disconnect();
+    } catch {
+      //
+    }
   }
 
   const buffer = await loadAudioBuffer(src);
 
+  if (myVoiceToken !== voiceToken) {
+    return;
+  }
+
   const source = ctx.createBufferSource();
 
   source.buffer = buffer;
-
   source.connect(voiceGain);
 
   currentVoiceSource = source;
 
-  source.start(0);
-
   source.onended = () => {
+    if (myVoiceToken !== voiceToken) {
+      return;
+    }
+
     if (currentVoiceSource === source) {
       currentVoiceSource = null;
     }
 
-    source.disconnect();
+    try {
+      source.disconnect();
+    } catch {
+      //
+    }
   };
+
+  source.start(0);
 };
 
 export const setBgmVolume = (volume) => {
