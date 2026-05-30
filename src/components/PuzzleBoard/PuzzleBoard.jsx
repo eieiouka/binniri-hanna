@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./PuzzleBoard.css";
 import initialPieces from "../../data/initialPieces";
-import { playVoice } from "../../audio/audioMixer";
+import {
+  fadeOutBgm,
+  playVoice,
+} from "../../audio/audioMixer";
 
 const CELL_SIZE = 80;
 const COLS = 4;
@@ -20,6 +23,7 @@ export default function PuzzleBoard() {
   const [selectedId, setSelectedId] = useState(null);
   const dragRef = useRef(null);
   const lastVoiceMoveRef = useRef(0);
+  const hasPlayedEndingRef = useRef(false);
 
   useEffect(() => {
     initialPieces.forEach((piece) => {
@@ -48,6 +52,23 @@ export default function PuzzleBoard() {
       ).catch(() => {});
     }
   }, [game.moveCount]);
+
+  useEffect(() => {
+    if (!game.isClear) {
+      return;
+    }
+
+    if (hasPlayedEndingRef.current) {
+      return;
+    }
+
+    hasPlayedEndingRef.current = true;
+
+    fadeOutBgm(2.0);
+
+    playVoice("/sounds/ending.mp3")
+      .catch(() => {});
+  }, [game.isClear]);
 
   const checkClear = (pieces) => {
     const hanna = pieces.find((p) => p.id === "hanna");
@@ -143,9 +164,13 @@ export default function PuzzleBoard() {
       );
 
       const nextMoveCount = prev.moveCount + 1;
-      const isClear = checkClear(nextPieces);
+
+      const isClear =
+        nextMoveCount < GAME_OVER_MOVE &&
+        checkClear(nextPieces);
+
       const isGameOver =
-        !isClear && nextMoveCount >= GAME_OVER_MOVE;
+        nextMoveCount >= GAME_OVER_MOVE;
 
       return {
         pieces: nextPieces,
@@ -218,6 +243,7 @@ export default function PuzzleBoard() {
     setSelectedId(null);
     dragRef.current = null;
     lastVoiceMoveRef.current = 0;
+    hasPlayedEndingRef.current = false;
 
     playVoice("/sounds/hanna_start.mp3")
       .catch(() => {});

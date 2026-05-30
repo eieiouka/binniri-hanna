@@ -141,3 +141,14 @@ export const setVoiceVolume = (volume) => {
 
   voiceGain.gain.value = volume;
 };
+
+export const fadeOutBgm = (duration = 2.0) => {
+  const ctx = getAudioContext();
+
+  const now = ctx.currentTime;
+  const currentVolume = bgmGain.gain.value;
+
+  bgmGain.gain.cancelScheduledValues(now);
+  bgmGain.gain.setValueAtTime(currentVolume, now);
+  bgmGain.gain.linearRampToValueAtTime(0, now + duration);
+};
