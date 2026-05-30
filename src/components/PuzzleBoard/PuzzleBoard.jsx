@@ -4,6 +4,7 @@ import initialPieces from "../../data/initialPieces";
 import {
   fadeOutBgm,
   playVoice,
+  startBgm,
 } from "../../audio/audioMixer";
 
 const CELL_SIZE = 80;
@@ -11,6 +12,7 @@ const COLS = 4;
 const ROWS = 5;
 const GAME_OVER_MOVE = 120;
 const HANNA_IMAGE_STEP = 20;
+const BGM_SRC = "/sounds/bgm_loop.mp3";
 
 export default function PuzzleBoard() {
   const [game, setGame] = useState({
@@ -24,6 +26,7 @@ export default function PuzzleBoard() {
   const dragRef = useRef(null);
   const lastVoiceMoveRef = useRef(0);
   const hasPlayedEndingRef = useRef(false);
+  const hasPlayedGameOverRef = useRef(false);
 
   useEffect(() => {
     initialPieces.forEach((piece) => {
@@ -69,6 +72,23 @@ export default function PuzzleBoard() {
     playVoice("/sounds/ending.mp3")
       .catch(() => {});
   }, [game.isClear]);
+
+  useEffect(() => {
+    if (!game.isGameOver) {
+      return;
+    }
+
+    if (hasPlayedGameOverRef.current) {
+      return;
+    }
+
+    hasPlayedGameOverRef.current = true;
+
+    fadeOutBgm(2.0);
+
+    playVoice("/sounds/bad_over.mp3")
+      .catch(() => {});
+  }, [game.isGameOver]);
 
   const checkClear = (pieces) => {
     const hanna = pieces.find((p) => p.id === "hanna");
@@ -244,8 +264,10 @@ export default function PuzzleBoard() {
     dragRef.current = null;
     lastVoiceMoveRef.current = 0;
     hasPlayedEndingRef.current = false;
+    hasPlayedGameOverRef.current = false;
 
-    playVoice("/sounds/hanna_start.mp3")
+    startBgm(BGM_SRC)
+      .then(() => playVoice("/sounds/hanna_start.mp3"))
       .catch(() => {});
   };
 

@@ -19,7 +19,7 @@ const getAudioContext = () => {
     voiceGain = audioContext.createGain();
 
     masterGain.gain.value = 1.0;
-    bgmGain.gain.value = 0.2;
+    bgmGain.gain.value = 0.25;
     voiceGain.gain.value = 1.0;
 
     bgmGain.connect(masterGain);
@@ -68,12 +68,26 @@ export const startBgm = async (src) => {
   await unlockAudio();
 
   if (bgmSource) {
-    bgmSource.stop();
+    try {
+      bgmSource.stop();
+    } catch {
+      //
+    }
+
     bgmSource.disconnect();
     bgmSource = null;
   }
 
   const buffer = await loadAudioBuffer(src);
+
+  bgmGain.gain.cancelScheduledValues(
+    ctx.currentTime
+  );
+
+  bgmGain.gain.setValueAtTime(
+    0.25,
+    ctx.currentTime
+  );
 
   bgmSource = ctx.createBufferSource();
   bgmSource.buffer = buffer;
