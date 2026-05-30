@@ -101,8 +101,12 @@ export default function PuzzleBoard() {
 
     const isHannaEscaping =
       targetPiece.id === "hanna" &&
+      dx === 0 &&
+      dy === 1 &&
+      targetPiece.x === 1 &&
+      targetPiece.y === 3 &&
       nextX === 1 &&
-      nextY + targetPiece.h <= 6;
+      nextY === 4;
 
     const isInsideBoard =
       nextX >= 0 &&
@@ -388,7 +392,7 @@ export default function PuzzleBoard() {
               />
 
               <p className="gameover-dialogue">
-                ハンナさん…。もう手遅れみたいですね…。（120手到達）
+                ハンナさん…。手遅れみたいですね…。（120手到達）
               </p>
             </div>
 
