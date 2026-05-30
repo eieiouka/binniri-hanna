@@ -243,7 +243,9 @@ export default function PuzzleBoard() {
                   <img
                     key={
                       piece.id === "hanna"
-                        ? Math.floor(game.moveCount / HANNA_IMAGE_STEP)
+                        ? Math.floor(
+                            game.moveCount / HANNA_IMAGE_STEP
+                          )
                         : piece.id
                     }
                     className={`${getPieceImageClassName(piece)} ${
