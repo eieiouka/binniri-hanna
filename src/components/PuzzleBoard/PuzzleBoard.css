@@ -394,6 +394,43 @@
   user-select: none;
 }
 
+.main-image {
+  width: 109%;
+  height: 109%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transform: translateY(-3%);
+
+  object-fit: cover;
+  object-position: center;
+}
+
+.image-change-effect {
+  animation: hannaImageChange 0.6s ease;
+}
+
+@keyframes hannaImageChange {
+  0% {
+    filter: none;
+  }
+
+  50% {
+    filter:
+      brightness(1.1)
+      saturate(3)
+      hue-rotate(-40deg)
+      drop-shadow(0 0 28px rgba(255, 0, 0, 1))
+      drop-shadow(0 0 56px rgba(255, 0, 0, 0.9));
+  }
+
+  100% {
+    filter: none;
+  }
+}
+
 /* =========================
    ▼ アニメ
 ========================= */
@@ -418,6 +455,20 @@
     transform: scale(1);
 
     opacity: 1;
+  }
+}
+
+@keyframes hannaRedFlash {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 

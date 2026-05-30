@@ -5,11 +5,14 @@ import initialPieces from "../../data/initialPieces";
 const CELL_SIZE = 80;
 const COLS = 4;
 const ROWS = 5;
+const GAME_OVER_MOVE = 120;
+const HANNA_IMAGE_STEP = 20;
 
 export default function PuzzleBoard() {
   const [game, setGame] = useState({
     pieces: initialPieces,
     isClear: false,
+    isGameOver: false,
     moveCount: 0,
   });
 
@@ -36,10 +39,14 @@ export default function PuzzleBoard() {
       nextX + targetPiece.w <= COLS &&
       nextY + targetPiece.h <= ROWS;
 
-    if (!isInsideBoard && !isHannaEscaping) return false;
+    if (!isInsideBoard && !isHannaEscaping) {
+      return false;
+    }
 
     return !pieces.some((other) => {
-      if (other.id === targetPiece.id) return false;
+      if (other.id === targetPiece.id) {
+        return false;
+      }
 
       return (
         nextX < other.x + other.w &&
@@ -50,30 +57,79 @@ export default function PuzzleBoard() {
     });
   };
 
+  const getPieceImageClassName = (piece) => {
+    if (piece.type === "main") {
+      return "piece-image main-image";
+    }
+
+    if (piece.type === "vertical") {
+      return "piece-image vertical-image";
+    }
+
+    if (piece.type === "horizontal") {
+      return "piece-image horizontal-image";
+    }
+
+    return "piece-image";
+  };
+
+  const getHannaImage = (piece, moveCount) => {
+    if (!piece.images || piece.images.length === 0) {
+      return piece.image;
+    }
+
+    const imageIndex = Math.min(
+      piece.images.length - 1,
+      Math.floor(moveCount / HANNA_IMAGE_STEP)
+    );
+
+    return piece.images[imageIndex];
+  };
+
   const movePiece = (pieceId, dx, dy) => {
     setGame((prev) => {
-      if (prev.isClear) return prev;
+      if (prev.isClear || prev.isGameOver) {
+        return prev;
+      }
 
       const target = prev.pieces.find((p) => p.id === pieceId);
-      if (!target) return prev;
-      if (!canMove(target, dx, dy, prev.pieces)) return prev;
+
+      if (!target) {
+        return prev;
+      }
+
+      if (!canMove(target, dx, dy, prev.pieces)) {
+        return prev;
+      }
 
       const nextPieces = prev.pieces.map((p) =>
         p.id === pieceId
-          ? { ...p, x: p.x + dx, y: p.y + dy }
+          ? {
+              ...p,
+              x: p.x + dx,
+              y: p.y + dy,
+            }
           : p
       );
 
+      const nextMoveCount = prev.moveCount + 1;
+      const isClear = checkClear(nextPieces);
+      const isGameOver =
+        !isClear && nextMoveCount >= GAME_OVER_MOVE;
+
       return {
         pieces: nextPieces,
-        moveCount: prev.moveCount + 1,
-        isClear: checkClear(nextPieces),
+        moveCount: nextMoveCount,
+        isClear,
+        isGameOver,
       };
     });
   };
 
   const handlePointerDown = (e, piece) => {
-    if (game.isClear) return;
+    if (game.isClear || game.isGameOver) {
+      return;
+    }
 
     e.currentTarget.setPointerCapture(e.pointerId);
     setSelectedId(piece.id);
@@ -89,8 +145,14 @@ export default function PuzzleBoard() {
 
   const handlePointerMove = (e) => {
     const drag = dragRef.current;
-    if (!drag || drag.moved || game.isClear) return;
-    if (drag.pointerId !== e.pointerId) return;
+
+    if (!drag || drag.moved || game.isClear || game.isGameOver) {
+      return;
+    }
+
+    if (drag.pointerId !== e.pointerId) {
+      return;
+    }
 
     const dx = e.clientX - drag.startX;
     const dy = e.clientY - drag.startY;
@@ -98,7 +160,9 @@ export default function PuzzleBoard() {
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
-    if (absX < 20 && absY < 20) return;
+    if (absX < 20 && absY < 20) {
+      return;
+    }
 
     drag.moved = true;
 
@@ -117,6 +181,7 @@ export default function PuzzleBoard() {
     setGame({
       pieces: initialPieces,
       isClear: false,
+      isGameOver: false,
       moveCount: 0,
     });
 
@@ -140,9 +205,16 @@ export default function PuzzleBoard() {
       </div>
 
       <div className="puzzle-frame">
-        <div className={`puzzle-board ${game.isClear ? "clear" : ""}`}>
+        <div
+          className={`puzzle-board ${
+            game.isClear ? "clear" : ""
+          } ${game.isGameOver ? "game-over" : ""}`}
+        >
           {game.pieces.map((piece) => {
-            console.log(piece.id, piece.image);
+            const imageSrc =
+              piece.id === "hanna"
+                ? getHannaImage(piece, game.moveCount)
+                : piece.image;
 
             return (
               <button
@@ -167,16 +239,21 @@ export default function PuzzleBoard() {
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
               >
-                {piece.image ? (
+                {imageSrc ? (
                   <img
-                    className={`piece-image ${
-                      piece.type === "vertical"
-                        ? "vertical-image"
-                        : piece.type === "horizontal"
-                        ? "horizontal-image"
+                    key={
+                      piece.id === "hanna"
+                        ? Math.floor(
+                            game.moveCount / HANNA_IMAGE_STEP
+                          )
+                        : piece.id
+                    }
+                    className={`${getPieceImageClassName(piece)} ${
+                      piece.id === "hanna"
+                        ? "image-change-effect"
                         : ""
                     }`}
-                    src={piece.image}
+                    src={imageSrc}
                     alt=""
                     draggable="false"
                   />
@@ -196,6 +273,22 @@ export default function PuzzleBoard() {
 
             <p className="clear-moves">
               {game.moveCount}手でクリア
+            </p>
+
+            <button onClick={resetGame}>
+              もう一度
+            </button>
+          </div>
+        </div>
+      )}
+
+      {game.isGameOver && (
+        <div className="clear-modal">
+          <div className="clear-box">
+            <p>ゲームオーバー</p>
+
+            <p className="clear-moves">
+              120手に到達しました
             </p>
 
             <button onClick={resetGame}>

@@ -2,7 +2,14 @@ const initialPieces = [
   {
     id: "hanna",
     label: "ハンナ",
-    image: "/images/pieces/musume.png",
+    images: [
+      "/images/pieces/hanna1.png",
+      "/images/pieces/hanna2.png",
+      "/images/pieces/hanna3.png",
+      "/images/pieces/hanna4.png",
+      "/images/pieces/hanna5.png",
+      "/images/pieces/hanna6.png",
+    ],
     x: 1,
     y: 0,
     w: 2,
