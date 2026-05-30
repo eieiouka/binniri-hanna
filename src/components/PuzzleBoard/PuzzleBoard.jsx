@@ -362,9 +362,7 @@ export default function PuzzleBoard() {
               />
 
               <p className="gameover-dialogue">
-                置き去りが嫌だって言ったので、
-                <br />
-                一緒に逝きましょう！
+                置き去りが嫌だって言ったので、一緒に逝きましょう！
               </p>
             </div>
 
