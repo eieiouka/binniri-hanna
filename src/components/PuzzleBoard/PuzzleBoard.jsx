@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./PuzzleBoard.css";
 import initialPieces from "../../data/initialPieces";
+import clearMacro from "../../data/clearMacro";
 import {
   fadeOutBgm,
   playVoice,
@@ -13,6 +14,8 @@ const ROWS = 5;
 const GAME_OVER_MOVE = 117;
 const HANNA_IMAGE_STEP = 20;
 const BGM_SRC = "/sounds/bgm_loop.mp3";
+const MACRO_INTERVAL_MS = 35;
+const MACRO_LONG_PRESS_MS = 10000;
 
 export default function PuzzleBoard() {
   const [game, setGame] = useState({
@@ -23,7 +26,12 @@ export default function PuzzleBoard() {
   });
 
   const [selectedId, setSelectedId] = useState(null);
+  const [isMacroRunning, setIsMacroRunning] =
+    useState(false);
   const dragRef = useRef(null);
+  const macroTimerRef = useRef(null);
+  const macroIndexRef = useRef(0);
+  const longPressStartAtRef = useRef(null);
   const lastVoiceMoveRef = useRef(0);
   const hasPlayedEndingRef = useRef(false);
   const hasPlayedGameOverRef = useRef(false);
@@ -39,6 +47,12 @@ export default function PuzzleBoard() {
         img.src = src;
       });
     });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      clearMacroTimer();
+    };
   }, []);
 
   useEffect(() => {
@@ -67,6 +81,8 @@ export default function PuzzleBoard() {
 
     hasPlayedEndingRef.current = true;
 
+    clearMacroTimer();
+
     fadeOutBgm(2.0);
 
     playVoice("/sounds/ending.mp3")
@@ -83,6 +99,8 @@ export default function PuzzleBoard() {
     }
 
     hasPlayedGameOverRef.current = true;
+
+    clearMacroTimer();
 
     fadeOutBgm(2.0);
 
@@ -132,81 +150,217 @@ export default function PuzzleBoard() {
     });
   };
 
-  const getPieceImageClassName = (piece) => {
-    if (piece.type === "main") {
-      return "piece-image main-image";
+  const findMacroTarget = (step, pieces) => {
+    if (step.id) {
+      return pieces.find((piece) => piece.id === step.id);
     }
 
-    if (piece.type === "vertical") {
-      return "piece-image vertical-image";
-    }
-
-    if (piece.type === "horizontal") {
-      return "piece-image horizontal-image";
-    }
-
-    return "piece-image";
+    return pieces.find(
+      (piece) =>
+        piece.type === step.type &&
+        piece.x === step.x &&
+        piece.y === step.y
+    );
   };
 
-  const getHannaImage = (piece, moveCount) => {
-    if (!piece.images || piece.images.length === 0) {
-      return piece.image;
+  const movePieceInState = (prev, pieceId, dx, dy) => {
+    if (prev.isClear || prev.isGameOver) {
+      return prev;
     }
 
-    const imageIndex = Math.min(
-      piece.images.length - 1,
-      Math.floor(moveCount / HANNA_IMAGE_STEP)
+    const target = prev.pieces.find((p) => p.id === pieceId);
+
+    if (!target) {
+      return prev;
+    }
+
+    if (!canMove(target, dx, dy, prev.pieces)) {
+      return prev;
+    }
+
+    const nextPieces = prev.pieces.map((p) =>
+      p.id === pieceId
+        ? {
+            ...p,
+            x: p.x + dx,
+            y: p.y + dy,
+          }
+        : p
     );
 
-    return piece.images[imageIndex];
+    const nextMoveCount = prev.moveCount + 1;
+
+    const isClear =
+      nextMoveCount < GAME_OVER_MOVE &&
+      checkClear(nextPieces);
+
+    const isGameOver =
+      nextMoveCount >= GAME_OVER_MOVE;
+
+    return {
+      pieces: nextPieces,
+      moveCount: nextMoveCount,
+      isClear,
+      isGameOver,
+    };
   };
 
   const movePiece = (pieceId, dx, dy) => {
-    setGame((prev) => {
-      if (prev.isClear || prev.isGameOver) {
-        return prev;
-      }
+    setGame((prev) =>
+      movePieceInState(prev, pieceId, dx, dy)
+    );
+  };
 
-      const target = prev.pieces.find((p) => p.id === pieceId);
+  const clearMacroTimer = () => {
+    if (!macroTimerRef.current) {
+      return;
+    }
 
-      if (!target) {
-        return prev;
-      }
+    clearInterval(macroTimerRef.current);
+    macroTimerRef.current = null;
+  };
 
-      if (!canMove(target, dx, dy, prev.pieces)) {
-        return prev;
-      }
+  const resetGame = () => {
+    clearMacroTimer();
 
-      const nextPieces = prev.pieces.map((p) =>
-        p.id === pieceId
-          ? {
-              ...p,
-              x: p.x + dx,
-              y: p.y + dy,
-            }
-          : p
-      );
-
-      const nextMoveCount = prev.moveCount + 1;
-
-      const isClear =
-        nextMoveCount < GAME_OVER_MOVE &&
-        checkClear(nextPieces);
-
-      const isGameOver =
-        nextMoveCount >= GAME_OVER_MOVE;
-
-      return {
-        pieces: nextPieces,
-        moveCount: nextMoveCount,
-        isClear,
-        isGameOver,
-      };
+    setGame({
+      pieces: initialPieces,
+      isClear: false,
+      isGameOver: false,
+      moveCount: 0,
     });
+
+    setSelectedId(null);
+    dragRef.current = null;
+    macroIndexRef.current = 0;
+    lastVoiceMoveRef.current = 0;
+    hasPlayedEndingRef.current = false;
+    hasPlayedGameOverRef.current = false;
+
+    startBgm(BGM_SRC)
+      .then(() => playVoice("/sounds/hanna_start.mp3"))
+      .catch(() => {});
+  };
+
+  const runClearMacro = () => {
+    setIsMacroRunning(true);
+    clearMacroTimer();
+
+    macroIndexRef.current = 0;
+
+    setGame({
+      pieces: initialPieces,
+      isClear: false,
+      isGameOver: false,
+      moveCount: 0,
+    });
+
+    setSelectedId(null);
+    dragRef.current = null;
+    lastVoiceMoveRef.current = 0;
+    hasPlayedEndingRef.current = false;
+    hasPlayedGameOverRef.current = false;
+
+    startBgm(BGM_SRC)
+      .then(() => playVoice("/sounds/hanna_start.mp3"))
+      .catch(() => {});
+
+    setTimeout(() => {
+      macroTimerRef.current = setInterval(() => {
+        const stepIndex = macroIndexRef.current;
+        const step = clearMacro[stepIndex];
+
+        if (!step) {
+          clearMacroTimer();
+          setIsMacroRunning(false);
+          setSelectedId(null);
+          return;
+        }
+
+        setGame((prev) => {
+          const target = findMacroTarget(step, prev.pieces);
+
+          if (!target) {
+            console.log(
+              "マクロ対象が見つかりません",
+              stepIndex + 1,
+              step
+            );
+
+            clearMacroTimer();
+            return prev;
+          }
+
+          setSelectedId(target.id);
+
+          const nextState = movePieceInState(
+            prev,
+            target.id,
+            step.dx,
+            step.dy
+          );
+
+          if (nextState === prev) {
+            console.log(
+              "マクロ移動に失敗しました",
+              stepIndex + 1,
+              step,
+              "target",
+              target
+            );
+
+            clearMacroTimer();
+            return prev;
+          }
+
+          return nextState;
+        });
+
+        macroIndexRef.current += 1;
+      }, MACRO_INTERVAL_MS);
+    }, 100);
+  };
+
+  const startResetLongPress = (e) => {
+    e.preventDefault();
+
+    longPressStartAtRef.current = Date.now();
+  };
+
+  const finishResetPress = (e) => {
+    e.preventDefault();
+
+    if (!longPressStartAtRef.current) {
+      resetGame();
+      return;
+    }
+
+    const pressTime =
+      Date.now() - longPressStartAtRef.current;
+
+    longPressStartAtRef.current = null;
+
+    console.log("押していた時間", pressTime);
+
+    if (pressTime >= MACRO_LONG_PRESS_MS) {
+      console.log("マクロ開始");
+      runClearMacro();
+      return;
+    }
+
+    resetGame();
+  };
+
+  const cancelResetLongPress = () => {
+    longPressStartAtRef.current = null;
   };
 
   const handlePointerDown = (e, piece) => {
-    if (game.isClear || game.isGameOver) {
+    if (
+      game.isClear ||
+      game.isGameOver ||
+      isMacroRunning
+    ) {
       return;
     }
 
@@ -256,23 +410,33 @@ export default function PuzzleBoard() {
     dragRef.current = null;
   };
 
-  const resetGame = () => {
-    setGame({
-      pieces: initialPieces,
-      isClear: false,
-      isGameOver: false,
-      moveCount: 0,
-    });
+  const getPieceImageClassName = (piece) => {
+    if (piece.type === "main") {
+      return "piece-image main-image";
+    }
 
-    setSelectedId(null);
-    dragRef.current = null;
-    lastVoiceMoveRef.current = 0;
-    hasPlayedEndingRef.current = false;
-    hasPlayedGameOverRef.current = false;
+    if (piece.type === "vertical") {
+      return "piece-image vertical-image";
+    }
 
-    startBgm(BGM_SRC)
-      .then(() => playVoice("/sounds/hanna_start.mp3"))
-      .catch(() => {});
+    if (piece.type === "horizontal") {
+      return "piece-image horizontal-image";
+    }
+
+    return "piece-image";
+  };
+
+  const getHannaImage = (piece, moveCount) => {
+    if (!piece.images || piece.images.length === 0) {
+      return piece.image;
+    }
+
+    const imageIndex = Math.min(
+      piece.images.length - 1,
+      Math.floor(moveCount / HANNA_IMAGE_STEP)
+    );
+
+    return piece.images[imageIndex];
   };
 
   return (
@@ -284,7 +448,12 @@ export default function PuzzleBoard() {
 
         <button
           className="reset-button"
-          onClick={resetGame}
+          onMouseDown={startResetLongPress}
+          onMouseUp={finishResetPress}
+          onMouseLeave={cancelResetLongPress}
+          onTouchStart={startResetLongPress}
+          onTouchEnd={finishResetPress}
+          onTouchCancel={cancelResetLongPress}
         >
           リセット
         </button>
