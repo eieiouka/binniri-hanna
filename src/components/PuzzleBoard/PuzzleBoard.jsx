@@ -28,6 +28,7 @@ export default function PuzzleBoard() {
   const [selectedId, setSelectedId] = useState(null);
   const [isMacroRunning, setIsMacroRunning] =
     useState(false);
+
   const dragRef = useRef(null);
   const macroTimerRef = useRef(null);
   const macroIndexRef = useRef(0);
@@ -82,6 +83,8 @@ export default function PuzzleBoard() {
     hasPlayedEndingRef.current = true;
 
     clearMacroTimer();
+    setIsMacroRunning(false);
+    setSelectedId(null);
 
     fadeOutBgm(2.0);
 
@@ -101,6 +104,8 @@ export default function PuzzleBoard() {
     hasPlayedGameOverRef.current = true;
 
     clearMacroTimer();
+    setIsMacroRunning(false);
+    setSelectedId(null);
 
     fadeOutBgm(2.0);
 
@@ -230,9 +235,11 @@ export default function PuzzleBoard() {
       moveCount: 0,
     });
 
+    setIsMacroRunning(false);
     setSelectedId(null);
     dragRef.current = null;
     macroIndexRef.current = 0;
+    longPressStartAtRef.current = null;
     lastVoiceMoveRef.current = 0;
     hasPlayedEndingRef.current = false;
     hasPlayedGameOverRef.current = false;
@@ -288,6 +295,9 @@ export default function PuzzleBoard() {
             );
 
             clearMacroTimer();
+            setIsMacroRunning(false);
+            setSelectedId(null);
+
             return prev;
           }
 
@@ -310,6 +320,9 @@ export default function PuzzleBoard() {
             );
 
             clearMacroTimer();
+            setIsMacroRunning(false);
+            setSelectedId(null);
+
             return prev;
           }
 
@@ -328,10 +341,9 @@ export default function PuzzleBoard() {
   };
 
   const finishResetPress = (e) => {
-    e.preventDefault();
+    e?.preventDefault?.();
 
     if (!longPressStartAtRef.current) {
-      resetGame();
       return;
     }
 
@@ -354,6 +366,20 @@ export default function PuzzleBoard() {
   const cancelResetLongPress = () => {
     longPressStartAtRef.current = null;
   };
+
+  useEffect(() => {
+    window.addEventListener(
+      "mouseup",
+      finishResetPress
+    );
+
+    return () => {
+      window.removeEventListener(
+        "mouseup",
+        finishResetPress
+      );
+    };
+  }, []);
 
   const handlePointerDown = (e, piece) => {
     if (
@@ -379,7 +405,13 @@ export default function PuzzleBoard() {
   const handlePointerMove = (e) => {
     const drag = dragRef.current;
 
-    if (!drag || drag.moved || game.isClear || game.isGameOver) {
+    if (
+      !drag ||
+      drag.moved ||
+      game.isClear ||
+      game.isGameOver ||
+      isMacroRunning
+    ) {
       return;
     }
 
@@ -449,8 +481,6 @@ export default function PuzzleBoard() {
         <button
           className="reset-button"
           onMouseDown={startResetLongPress}
-          onMouseUp={finishResetPress}
-          onMouseLeave={cancelResetLongPress}
           onTouchStart={startResetLongPress}
           onTouchEnd={finishResetPress}
           onTouchCancel={cancelResetLongPress}
